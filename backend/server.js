@@ -195,10 +195,11 @@ app.use((req, res) => {
 async function startServer() {
   try {
     await testConnection();
-    await syncCourseColumns();
     await sequelize.sync();
 
     console.log('Database synced successfully');
+
+    await syncCourseColumns();
 
     await initSuperAdmin();
     await initScheduledReminders();
