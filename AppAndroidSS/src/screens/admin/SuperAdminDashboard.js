@@ -11,7 +11,8 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import _Animated, { FadeInDown } from 'react-native-reanimated';
+const Animated = (_Animated && _Animated.View) ? _Animated : { View };
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
