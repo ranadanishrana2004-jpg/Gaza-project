@@ -33,24 +33,8 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-function isAllowedOrigin(origin) {
-  if (!origin) return true;
-  if (origin.endsWith('.vercel.app')) return true;
-  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
-  const extra = (process.env.FRONTEND_URL || '').trim().replace(/\/$/, '');
-  if (extra && origin === extra) return true;
-  return false;
-}
-
 app.use(cors({
-  origin: (origin, callback) => {
-    if (isAllowedOrigin(origin)) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -141,22 +125,19 @@ async function startServer() {
   try {
     await testConnection();
     await sequelize.sync();
-
     console.log('Database synced successfully');
-
-    await syncCourseColumns();
-
-    await initSuperAdmin();
-    await initScheduledReminders();
-
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-      console.log(`API endpoints available at http://localhost:${PORT}/api`);
-    });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    console.error('Failed to connect to database:', error);
     process.exit(1);
   }
+
+  try { await syncCourseColumns(); } catch (e) { console.error('syncCourseColumns failed (non-fatal):', e.message); }
+  try { await initSuperAdmin(); } catch (e) { console.error('initSuperAdmin failed (non-fatal):', e.message); }
+  try { await initScheduledReminders(); } catch (e) { console.error('initScheduledReminders failed (non-fatal):', e.message); }
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 
 startServer();
