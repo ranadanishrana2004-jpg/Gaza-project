@@ -129,7 +129,7 @@ app.use((req, res, next) => {
   if (
     !allowedOrigins.includes(requestOrigin) &&
     !isPrivateNetworkOrigin(requestOrigin) &&
-    !(requestOrigin.includes('.vercel.app') && (requestOrigin.includes('skill-sphere') || requestOrigin.includes('skillsphere')))
+    !requestOrigin.endsWith('.vercel.app')
   ) {
     console.log('CORS blocked origin:', requestOrigin);
 
