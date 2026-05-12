@@ -15,7 +15,6 @@ const shouldTranspileModule = (filepath) => {
     'react-native-linear-gradient',
     'react-native-vector-icons',
     'react-native-paper',
-    'react-native-reanimated',
     'react-native-gesture-handler',
     'react-native-screens',
     'react-native-safe-area-context',
@@ -49,6 +48,7 @@ module.exports = {
       'react-native$': path.resolve(__dirname, 'react-native-web-compat.js'),
       'react-native/package.json': resolveModule('react-native/package.json'),
       '@react-native-async-storage/async-storage': '@react-native-async-storage/async-storage',
+      'react-native-reanimated': path.resolve(__dirname, 'src/shims/Reanimated.web.js'),
       react: path.dirname(resolveModule('react/package.json')),
       'react-dom': path.dirname(resolveModule('react-dom/package.json')),
     },
@@ -79,7 +79,6 @@ module.exports = {
             ],
             plugins: [
               '@babel/plugin-transform-flow-strip-types',
-              'react-native-reanimated/plugin',
             ],
           },
         },
