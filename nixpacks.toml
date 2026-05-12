@@ -5,7 +5,7 @@ nixPkgs = ["nodejs-18_x"]
 cmds = ["cd backend && npm install --legacy-peer-deps"]
 
 [phases.build]
-cmds = []
+cmds = ["echo 'Backend only - skipping frontend build'"]
 
 [start]
 cmd = "cd backend && node server.js"
