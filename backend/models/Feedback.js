@@ -49,11 +49,7 @@ const Feedback = sequelize.define('Feedback', {
   },
   lectureId: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: 'ai_lectures',
-      key: 'id'
-    }
+    allowNull: true
   },
   expertId: {
     type: DataTypes.INTEGER,
