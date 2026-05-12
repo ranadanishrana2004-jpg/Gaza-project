@@ -28,51 +28,34 @@ const streakRoutes = require('./routes/streakRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const { initScheduledReminders } = require('./controllers/todoController');
 
+const cors = require('cors');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-function normalizeOrigin(origin) {
-  return `${origin || ''}`
-    .trim()
-    .replace(/^"|"$/g, '')
-    .replace(/\/$/, '');
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  const extra = (process.env.FRONTEND_URL || '').trim().replace(/\/$/, '');
+  if (extra && origin === extra) return true;
+  return false;
 }
 
-function parseAllowedOrigins(value) {
-  return `${value || ''}`
-    .split(',')
-    .map(normalizeOrigin)
-    .filter(Boolean);
-}
-
-function buildAllowedOrigins() {
-  return Array.from(new Set([
-    'https://skill-sphere-app.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:19006',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001',
-    'http://127.0.0.1:19006',
-    'http://10.0.2.2:3000',
-    'http://10.0.2.2:3001',
-    'http://10.0.2.2:19006',
-    normalizeOrigin(process.env.FRONTEND_URL),
-    ...parseAllowedOrigins(process.env.ALLOWED_ORIGINS),
-  ].filter(Boolean)));
-}
-
-function isPrivateNetworkOrigin(origin) {
-  return /^https?:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+|192\.168\.\d+\.\d+)(:\d+)?$/i.test(origin);
-}
-
-const allowedOrigins = buildAllowedOrigins();
-const corsOptions = {
+app.use(cors({
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 204,
-};
+}));
 
 async function initSuperAdmin() {
   try {
@@ -113,44 +96,6 @@ async function initSuperAdmin() {
     console.error('Error creating SuperAdmin:', error.message);
   }
 }
-
-app.use((req, res, next) => {
-  const requestOrigin = normalizeOrigin(req.headers.origin);
-
-  res.header('Vary', 'Origin');
-
-  if (!requestOrigin) {
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(corsOptions.optionsSuccessStatus);
-    }
-    return next();
-  }
-
-  if (
-    !allowedOrigins.includes(requestOrigin) &&
-    !isPrivateNetworkOrigin(requestOrigin) &&
-    !requestOrigin.endsWith('.vercel.app')
-  ) {
-    console.log('CORS blocked origin:', requestOrigin);
-
-    if (req.method === 'OPTIONS') {
-      return res.status(403).json({ error: 'Not allowed by CORS' });
-    }
-
-    return res.status(403).json({ error: 'Not allowed by CORS' });
-  }
-
-  res.header('Access-Control-Allow-Origin', requestOrigin);
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', corsOptions.methods.join(','));
-  res.header('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(','));
-
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(corsOptions.optionsSuccessStatus);
-  }
-
-  return next();
-});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
