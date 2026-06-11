@@ -68,22 +68,6 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
-// Get all experts
-exports.getAllExperts = async (req, res) => {
-  try {
-    const experts = await User.findAll({
-      where: { role: 'expert' },
-      attributes: ['id', 'name', 'email', 'phone', 'isActive', 'permissions', 'createdAt'],
-      order: [['createdAt', 'DESC']]
-    });
-
-    res.json({ success: true, experts });
-  } catch (error) {
-    console.error('Get experts error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {

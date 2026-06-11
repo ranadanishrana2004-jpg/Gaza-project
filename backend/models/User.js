@@ -29,7 +29,7 @@ const User = sequelize.define('User', {
     allowNull: true
   },
   role: {
-    type: DataTypes.ENUM('student', 'expert', 'admin', 'superadmin'),
+    type: DataTypes.ENUM('student', 'instructor', 'superadmin', 'sponsor'),
     allowNull: false,
     defaultValue: 'student'
   },
@@ -44,7 +44,7 @@ const User = sequelize.define('User', {
     get() {
       const rawValue = this.getDataValue('permissions');
       // Return empty object if null, frontend will handle defaults
-      if (!rawValue && ['admin', 'expert'].includes(this.role)) {
+      if (!rawValue && ['instructor'].includes(this.role)) {
         return {};
       }
       return rawValue || {};
@@ -78,6 +78,14 @@ const User = sequelize.define('User', {
     defaultValue: 'local'
   },
   privacyPolicyAccepted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  isWarZone: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },

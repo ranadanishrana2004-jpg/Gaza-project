@@ -6,7 +6,7 @@ const SAFE_USER_EXCLUDE_FIELDS = ['password', 'otpCode', 'otpExpiry'];
 exports.createAdmin = async (req, res) => {
   console.log('====== CREATE ADMIN CALLED ======');
   try {
-    const { name, email, password, role = 'admin' } = req.body;
+    const { name, email, password, role = 'instructor' } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required' });
@@ -19,8 +19,8 @@ exports.createAdmin = async (req, res) => {
     }
 
     // Validate role
-    const validRoles = ['admin', 'expert', 'superadmin'];
-    const roleToUse = validRoles.includes(role) ? role : 'admin';
+    const validRoles = ['instructor', 'superadmin'];
+    const roleToUse = validRoles.includes(role) ? role : 'instructor';
 
     const user = await User.create({
       name,
@@ -59,7 +59,7 @@ exports.getAllAdmins = async (req, res) => {
   try {
     const users = await User.findAll({
       where: {
-        role: ['admin', 'expert']
+        role: ['instructor']
       },
       attributes: { exclude: SAFE_USER_EXCLUDE_FIELDS },
       order: [['createdAt', 'DESC']]
@@ -67,7 +67,7 @@ exports.getAllAdmins = async (req, res) => {
 
     const usersWithPermissions = users.map(user => {
       const userJson = user.toJSON();
-      if (!userJson.permissions && ['admin', 'expert'].includes(userJson.role)) {
+      if (!userJson.permissions && ['instructor'].includes(userJson.role)) {
         userJson.permissions = {
           canManageAllCourses: true,
           canManageCategories: true,
@@ -129,7 +129,7 @@ exports.updateAdmin = async (req, res) => {
 
     if (name) user.name = name;
     if (typeof isActive === 'boolean') user.isActive = isActive;
-    if (role && ['student', 'expert', 'admin', 'superadmin'].includes(role)) {
+    if (role && ['student', 'instructor', 'superadmin', 'sponsor'].includes(role)) {
       user.role = role;
     }
 
@@ -208,8 +208,8 @@ exports.updateAdminPermissions = async (req, res) => {
       return res.status(400).json({ error: 'Cannot modify your own permissions' });
     }
 
-    if (!['admin', 'expert'].includes(user.role)) {
-      return res.status(400).json({ error: 'Permissions can only be set for admin and expert users' });
+    if (!['instructor'].includes(user.role)) {
+      return res.status(400).json({ error: 'Permissions can only be set for admin users' });
     }
 
     user.setDataValue('permissions', permissions);

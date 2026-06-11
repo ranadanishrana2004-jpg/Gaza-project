@@ -28,7 +28,6 @@ export const DataProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [students, setStudents] = useState([]);
-  const [experts, setExperts] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [certificates, setCertificates] = useState([]);
@@ -417,18 +416,6 @@ export const DataProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchExperts = useCallback(async () => {
-    try {
-      const response = await userAPI.getExperts();
-      if (response.success) {
-        setExperts(response.experts || []);
-      }
-      return response;
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  }, []);
-
   const updateUser = async (id, data) => {
     try {
       const response = await userAPI.update(id, data);
@@ -535,7 +522,6 @@ export const DataProvider = ({ children }) => {
     courses,
     categories,
     students,
-    experts,
     enrollments,
     notifications,
     certificates,
@@ -594,7 +580,6 @@ export const DataProvider = ({ children }) => {
 
     // Users
     fetchStudents,
-    fetchExperts,
     updateUser,
     deleteUser,
     toggleUserStatus,

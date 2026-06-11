@@ -11,6 +11,7 @@ import SignupOTPScreen from '../screens/auth/SignupOTPScreen';
 import SignupDetailsScreen from '../screens/auth/SignupDetailsScreen';
 import LoginOTPScreen from '../screens/auth/LoginOTPScreen';
 import GazaEducationSupportScreen from '../screens/auth/GazaEducationSupportScreen';
+import StaticPageScreen from '../screens/auth/StaticPageScreen';
 
 // Debug: Verify imports
 console.log('AuthNavigator - SignupOTPScreen:', typeof SignupOTPScreen, SignupOTPScreen ? 'loaded' : 'undefined');
@@ -53,6 +54,7 @@ const AuthNavigator = () => {
       <Stack.Screen name="ExploreCourses" component={ExploreCoursesScreen} />
       <Stack.Screen name="ExploreCourseDetail" component={ExploreCourseDetailScreen} />
       <Stack.Screen name="GazaEducationSupport" component={GazaEducationSupportScreen} />
+      <Stack.Screen name="StaticPage" component={StaticPageScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
       <Stack.Screen name="SignupOTP" component={SignupOTPScreen} />

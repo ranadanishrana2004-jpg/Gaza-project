@@ -301,7 +301,7 @@ const HeroSection = ({ navigation, theme, isDark, isMobile }) => {
   const stats = [
     { value:'10K+', label:'Students' },
     { value:'200+', label:'Courses' },
-    { value:'50+',  label:'Experts' },
+    { value:'50+',  label:'Scholars' },
     { value:'95%',  label:'Success' },
   ];
 
@@ -328,8 +328,8 @@ const HeroSection = ({ navigation, theme, isDark, isMobile }) => {
           styles.heroSub, { color: theme.colors.textSecondary },
           isMobile && { fontSize:14, lineHeight:22, paddingHorizontal:8, marginBottom:24 },
         ]}>
-          Learn from industry experts with hands-on projects,{'\n'}
-          AI-assisted tutoring, and globally recognised certificates.
+          Learn Medicine and Islamic Education from qualified scholars,{'\n'}
+          with AI-assisted tutoring and globally recognised certificates.
         </Text>
 
         <View style={[styles.heroCTAs, isMobile && { flexDirection:'column', width:'100%', paddingHorizontal:20, gap:10 }]}>
@@ -489,7 +489,7 @@ const GazaSupportSection = ({ navigation, theme, isDark, isMobile, onLayout }) =
 // ─── 4. FEATURES ──────────────────────────────────────────────────────────────
 const FeaturesSection = ({ theme, isDark, isMobile, onLayout }) => {
   const features = [
-    { icon:'school-outline',     title:'Expert Instructors', desc:'Learn from certified professionals with real-world industry experience.' },
+    { icon:'school-outline',     title:'Qualified Instructors', desc:'Learn from qualified medical professionals and Islamic scholars.' },
     { icon:'time-outline',       title:'Flexible Learning',  desc:'Study at your own pace with lifetime access to all course materials.' },
     { icon:'ribbon-outline',     title:'Certificates',       desc:'Earn industry-recognised certificates that boost your career prospects.' },
     { icon:'construct-outline',  title:'Live Projects',      desc:'Apply knowledge with hands-on projects that build your portfolio.' },
@@ -500,7 +500,7 @@ const FeaturesSection = ({ theme, isDark, isMobile, onLayout }) => {
   return (
     <View style={[styles.section, { backgroundColor: isDark ? NAVY2 : '#FFFFFF', paddingVertical: isMobile ? 48 : 72 }]} onLayout={onLayout}>
       <SectionTitle tag="Why Us" title="Everything You Need to Succeed"
-        subtitle="We combine cutting-edge technology with expert knowledge to deliver an unparalleled learning experience."
+        subtitle="We combine cutting-edge technology with qualified instruction to deliver an unparalleled learning experience."
         theme={theme} isMobile={isMobile} />
       <View style={[styles.featuresGrid, isMobile && { flexDirection:'column', gap:12 }]}>
         {features.map(f => (
@@ -527,7 +527,7 @@ const FeaturesSection = ({ theme, isDark, isMobile, onLayout }) => {
 // ─── 5. HOW IT WORKS ──────────────────────────────────────────────────────────
 const HowItWorksSection = ({ theme, isDark, isMobile, onLayout }) => {
   const steps = [
-    { icon:'search-outline',     num:'01', title:'Browse Courses',  desc:'Explore our library of courses across technology, business, design, and more.' },
+    { icon:'search-outline',     num:'01', title:'Browse Courses',  desc:'Explore our library of specialized courses in Medicine and Islamic Education.' },
     { icon:'person-add-outline', num:'02', title:'Enroll & Learn',  desc:'Enroll and learn with video lessons, hands-on projects, and quizzes.' },
     { icon:'medal-outline',      num:'03', title:'Earn Certificate',desc:'Complete the course, pass the assessment, and download your certificate.' },
   ];
@@ -573,8 +573,7 @@ const HowItWorksSection = ({ theme, isDark, isMobile, onLayout }) => {
 
 // ─── 6. COURSES CAROUSEL ──────────────────────────────────────────────────────
 const CAT_COLORS = {
-  Technology: '#6366F1', Design: '#EC4899', Business: '#10B981',
-  'Data Science': '#3B82F6', Data: '#3B82F6', Marketing: '#F59E0B',
+  Medicine: '#EF4444', 'Islamic Education': '#10B981',
 };
 
 const CoursesCarousel = ({ navigation, theme, isDark, isMobile, onLayout }) => {
@@ -772,7 +771,7 @@ const CoursesCarousel = ({ navigation, theme, isDark, isMobile, onLayout }) => {
 const StatisticsSection = ({ isMobile }) => {
   const stats = [
     { icon:'people',  value:'10,000+', label:'Active Students' },
-    { icon:'library', value:'200+',    label:'Expert Courses' },
+    { icon:'library', value:'200+',    label:'Courses Available' },
     { icon:'school',  value:'50+',     label:'Instructors' },
     { icon:'trophy',  value:'95%',     label:'Completion Rate' },
   ];
@@ -797,12 +796,12 @@ const StatisticsSection = ({ isMobile }) => {
 const FAQSection = ({ theme, isDark, isMobile, onLayout }) => {
   const [openIndex, setOpenIndex] = useState(null);
   const faqs = [
-    { q:'Is SkillSphere free to use?', a:'Yes! You can sign up for free and access a selection of free courses. Premium courses may have fees set by the instructor.' },
+    { q:'Is SkillSphere free to use?', a:'SkillSphere is completely FREE for learners located in war zones. For everyone else, there is a compulsory donation/payment which directly supports educational infrastructure in affected countries.' },
+    { q:'Is my payment information secure?', a:'Yes. We use industry-standard encryption and trusted payment processors to ensure your donations and payments are completely secure.' },
     { q:'How do I get a certificate?', a:"After completing all topics and passing the final quiz with 70%+, you'll automatically receive a personalized certificate to download as a PDF." },
-    { q:'Can I learn on mobile devices?', a:'Absolutely. SkillSphere works seamlessly on web, Android, and iOS. Your progress is synced across all platforms.' },
+    { q:'How do sponsors work?', a:'Sponsors can create an account to fund students. Sponsors get access to track their student\'s progress, attendance, and results, and can communicate securely without sharing phone numbers.' },
     { q:'What is the AI Assistant feature?', a:'Our AI Assistant is powered by an advanced language model inside each course. Ask questions about lesson content, get explanations, or request practice exercises.' },
-    { q:'How do instructors apply to teach?', a:'Experts can register an account and apply to become an instructor. After admin approval, you can create and publish courses.' },
-    { q:'Is my payment information secure?', a:'SkillSphere uses industry-standard encryption and trusted payment processors to ensure your financial data is always protected.' },
+    { q:'What can I study on SkillSphere?', a:'We focus on two core areas of study: Medicine and Islamic Education. Course content is curated and published by our administrators and qualified scholars.' },
   ];
   return (
     <View style={[styles.section, { backgroundColor: isDark ? NAVY : '#F8F9FF', paddingVertical: isMobile ? 48 : 72 }]} onLayout={onLayout}>
@@ -851,7 +850,7 @@ const CTABanner = ({ navigation, isMobile }) => (
       <TouchableOpacity
         style={[styles.ctaPrimary, isMobile && { width:'100%', justifyContent:'center' }]}
         onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.ctaPrimaryText}>Create Free Account</Text>
+        <Text style={styles.ctaPrimaryText}>Create Account / Support</Text>
         <Icon name="rocket-outline" size={17} color={NAVY} />
       </TouchableOpacity>
       <TouchableOpacity
@@ -949,10 +948,10 @@ const ContactForm = ({ theme, isDark, isMobile, onLayout }) => {
 // ─── 13. FOOTER ───────────────────────────────────────────────────────────────
 const Footer = ({ navigation, theme, isDark, isMobile }) => {
   const cols = [
-    { title:'Courses',  links:['Technology','Design','Business','Data Science','Marketing'] },
-    { title:'Company',  links:['About Us','Careers','Blog','Press'] },
-    { title:'Support',  links:['Help Center','Contact Us','Community','Status'] },
-    { title:'Legal',    links:['Privacy Policy','Terms of Service','Cookie Policy'] },
+    { title:'Courses',  links:[{ name:'Explore Courses', nav:'ExploreCourses' }] },
+    { title:'Company',  links:[{ name:'About Us', nav:'StaticPage', param:'about' }] },
+    { title:'Support',  links:[{ name:'Donate to Gaza', nav:'GazaEducationSupport' }] },
+    { title:'Legal',    links:[{ name:'Privacy Policy', nav:'StaticPage', param:'privacy' }, { name:'Terms of Service', nav:'StaticPage', param:'terms' }] },
   ];
   const socials = [
     { icon:'logo-twitter', label:'Twitter' },
@@ -960,6 +959,15 @@ const Footer = ({ navigation, theme, isDark, isMobile }) => {
     { icon:'logo-instagram', label:'Instagram' },
     { icon:'logo-youtube', label:'YouTube' },
   ];
+
+  const handleLinkPress = (link) => {
+    if (link.param) {
+      navigation.navigate(link.nav, { pageId: link.param });
+    } else if (link.nav) {
+      navigation.navigate(link.nav);
+    }
+  };
+
   return (
     <View style={[styles.footer, { paddingHorizontal: isMobile ? 20 : 32 }]}>
       <View style={[styles.footerGrid, isMobile && { flexDirection:'column', gap:28 }]}>
@@ -969,7 +977,7 @@ const Footer = ({ navigation, theme, isDark, isMobile }) => {
             <Text style={styles.footerLogoName}>Skill<Text style={{ color:ORANGE }}>Sphere</Text></Text>
           </View>
           <Text style={[styles.footerTagline, isMobile && { fontSize:13 }]}>
-            Empowering learners worldwide with expert knowledge, AI assistance, and industry-recognised certifications.
+            Empowering learners worldwide with quality knowledge, AI assistance, and recognised certifications.
           </Text>
           <View style={styles.footerSocials}>
             {socials.map(s => (
@@ -985,8 +993,8 @@ const Footer = ({ navigation, theme, isDark, isMobile }) => {
             <View key={col.title} style={[styles.footerCol, isMobile && { width:'50%', marginBottom:24 }]}>
               <Text style={styles.footerColTitle}>{col.title}</Text>
               {col.links.map(link => (
-                <TouchableOpacity key={link} style={{ marginBottom:9 }}>
-                  <Text style={[styles.footerLink, isMobile && { fontSize:12 }]}>{link}</Text>
+                <TouchableOpacity key={link.name} style={{ marginBottom:9 }} onPress={() => handleLinkPress(link)}>
+                  <Text style={[styles.footerLink, isMobile && { fontSize:12 }]}>{link.name}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -997,9 +1005,8 @@ const Footer = ({ navigation, theme, isDark, isMobile }) => {
       <View style={[styles.footerBottom, { borderTopColor:'rgba(255,255,255,0.1)' }, isMobile && { flexDirection:'column', alignItems:'center', gap:10 }]}>
         <Text style={styles.footerCopy}>© {new Date().getFullYear()} SkillSphere. All rights reserved.</Text>
         <View style={{ flexDirection:'row', gap:20 }}>
-          <TouchableOpacity><Text style={styles.footerBottomLink}>Privacy</Text></TouchableOpacity>
-          <TouchableOpacity><Text style={styles.footerBottomLink}>Terms</Text></TouchableOpacity>
-          <TouchableOpacity><Text style={styles.footerBottomLink}>Cookies</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('StaticPage', { pageId: 'privacy' })}><Text style={styles.footerBottomLink}>Privacy</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('StaticPage', { pageId: 'terms' })}><Text style={styles.footerBottomLink}>Terms</Text></TouchableOpacity>
         </View>
       </View>
     </View>

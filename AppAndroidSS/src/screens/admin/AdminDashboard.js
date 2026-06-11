@@ -321,11 +321,9 @@ const AdminDashboard = () => {
   const {
     courses,
     students,
-    experts,
     enrollments,
     fetchStudents,
     fetchCourses,
-    fetchExperts,
   } = useData();
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
@@ -346,7 +344,7 @@ const AdminDashboard = () => {
     { label: 'Manage Courses', icon: 'book-outline', iconActive: 'book', route: 'Courses' },
     { label: 'Students', icon: 'people-outline', iconActive: 'people', route: 'Students' },
     { label: 'Certificates', icon: 'ribbon-outline', iconActive: 'ribbon', route: 'CertificateManagement' },
-    { label: 'Expert Feedback', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Feedback' },
+    { label: 'Course Feedback', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Feedback' },
   ];
 
   useEffect(() => {
@@ -366,7 +364,6 @@ const AdminDashboard = () => {
       await Promise.all([
         fetchCourses(),
         fetchStudents(),
-        fetchExperts(),
       ]);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -380,7 +377,6 @@ const AdminDashboard = () => {
       await Promise.all([
         fetchCourses(),
         fetchStudents(),
-        fetchExperts(),
       ]);
     } catch (error) {
       console.error('Error reloading data:', error);
@@ -405,7 +401,7 @@ const AdminDashboard = () => {
   const stats = useMemo(() => {
     const totalCourses = courses.length;
     const totalStudents = students.length;
-    const activeExperts = experts?.length || 0;
+    const totalEnrollments = enrollments?.length || 0;
     const publishedCourses = courses.filter((c) => c.status === 'published').length;
 
     // Calculate last month's data for percentage change
@@ -431,14 +427,14 @@ const AdminDashboard = () => {
     return {
       totalCourses,
       totalStudents,
-      activeExperts,
+      totalEnrollments,
       publishedCourses,
       courseChange: calculatePercentageChange(totalCourses, coursesLastMonth),
       studentChange: calculatePercentageChange(totalStudents, studentsLastMonth),
-      expertChange: '+8%', // Static for now as we don't track expert history
+      enrollmentChange: '',
       publishedChange: calculatePercentageChange(publishedCourses, publishedLastMonth),
     };
-  }, [courses, students, experts]);
+  }, [courses, students, enrollments]);
 
   // Build course growth chart data from real data
   const courseGrowthData = useMemo(() => {
@@ -535,7 +531,7 @@ const AdminDashboard = () => {
         sidebarItems={sidebarItems}
         activeRoute="Dashboard"
         onNavigate={handleNavigate}
-        userInfo={{ name: user?.name, role: 'Administrator', avatar: user?.avatar }}
+        userInfo={{ name: user?.name, role: 'Instructor', avatar: user?.avatar }}
         onLogout={logout}
         onSettings={() => navigation.navigate('Settings')}
       >
@@ -547,7 +543,7 @@ const AdminDashboard = () => {
                 <Icon name="grid" size={24} color={theme.colors.primary} />
               </View>
               <View>
-                <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Admin Dashboard</Text>
+                <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Instructor Dashboard</Text>
                 <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>
                   Welcome back! Here's your platform overview.
                 </Text>
@@ -576,7 +572,7 @@ const AdminDashboard = () => {
       sidebarItems={sidebarItems}
       activeRoute="Dashboard"
       onNavigate={handleNavigate}
-      userInfo={{ name: user?.name, role: 'Administrator', avatar: user?.avatar }}
+      userInfo={{ name: user?.name, role: 'Instructor', avatar: user?.avatar }}
       onLogout={logout}
       onSettings={() => navigation.navigate('Settings')}
     >
@@ -600,9 +596,9 @@ const AdminDashboard = () => {
               <Icon name="grid" size={24} color={theme.colors.primary} />
             </View>
             <View>
-              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Admin Dashboard</Text>
+              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Instructor Dashboard</Text>
               <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>
-                Oversee courses, learners, and experts from one clear control center.
+                Oversee courses, learners, and enrollments from one clear control center.
               </Text>
             </View>
           </View>
@@ -638,11 +634,11 @@ const AdminDashboard = () => {
             style={styles.statCard}
           />
           <DashboardStatCard
-            icon="shield-checkmark-outline"
+            icon="school-outline"
             iconColor={theme.colors.success}
-            value={stats.activeExperts}
-            label="Active Experts"
-            change={stats.expertChange}
+            value={stats.totalEnrollments}
+            label="Total Enrollments"
+            change={stats.enrollmentChange}
             theme={theme}
             isDark={isDark}
             style={styles.statCard}

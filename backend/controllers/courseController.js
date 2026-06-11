@@ -2,7 +2,7 @@ const { Course, Category, Topic, Material, Enrollment, Quiz } = require('../mode
 
 function ensureCourseAuthoringAccess(user, course = null) {
   const isSuperAdmin = user.role === 'superadmin';
-  const isAdmin = user.role === 'admin';
+  const isAdmin = user.role === 'instructor';
   const canManageAll = user.permissions?.canManageAllCourses === true;
   const isOwner = course ? course.userId === user.id : false;
 

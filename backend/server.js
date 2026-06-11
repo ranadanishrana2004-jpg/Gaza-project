@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
@@ -7,6 +9,9 @@ require('./models');
 const { User } = require('./models');
 const { sendSuperAdminWelcomeEmail } = require('./services/emailService');
 const syncCourseColumns = require('./scripts/syncCourseColumns');
+const seedCoreCategories = require('./scripts/seedCoreCategories');
+const seedDemoContent = require('./scripts/seedDemoContent');
+const migrateAdminToInstructor = require('./scripts/migrateAdminToInstructor');
 
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -26,11 +31,63 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const aiChatRoutes = require('./routes/aiChatRoutes');
 const streakRoutes = require('./routes/streakRoutes');
 const todoRoutes = require('./routes/todoRoutes');
+const libraryRoutes = require('./routes/libraryRoutes');
+const forumRoutes = require('./routes/forumRoutes');
+const sponsorshipRoutes = require('./routes/sponsorshipRoutes');
+const studentUploadRoutes = require('./routes/studentUploadRoutes');
 const { initScheduledReminders } = require('./controllers/todoController');
 
 const cors = require('cors');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: true,
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Socket.IO for Forum functionality
+io.on('connection', (socket) => {
+  console.log('A user connected via socket:', socket.id);
+
+  socket.on('joinChannel', (channelId) => {
+    socket.join(`channel_${channelId}`);
+    console.log(`Socket ${socket.id} joined channel_${channelId}`);
+  });
+
+  socket.on('leaveChannel', (channelId) => {
+    socket.leave(`channel_${channelId}`);
+    console.log(`Socket ${socket.id} left channel_${channelId}`);
+  });
+
+  socket.on('sendMessage', async (data) => {
+    const { channelId, senderId, content } = data;
+    try {
+      const { ForumMessage, User } = require('./models');
+      const message = await ForumMessage.create({
+        channelId,
+        senderId,
+        content
+      });
+
+      const messageWithSender = await ForumMessage.findByPk(message.id, {
+        include: [{ model: User, as: 'sender', attributes: ['id', 'name', 'email', 'profilePicture', 'role'] }]
+      });
+
+      io.to(`channel_${channelId}`).emit('newMessage', messageWithSender);
+    } catch (error) {
+      console.error('Error saving/emitting socket message:', error);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
@@ -109,6 +166,10 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/ai-chat', aiChatRoutes);
 app.use('/api/streak', streakRoutes);
 app.use('/api/todos', todoRoutes);
+app.use('/api/library', libraryRoutes);
+app.use('/api/forum', forumRoutes);
+app.use('/api/sponsorships', sponsorshipRoutes);
+app.use('/api/student-uploads', studentUploadRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -132,10 +193,13 @@ async function startServer() {
   }
 
   try { await syncCourseColumns(); } catch (e) { console.error('syncCourseColumns failed (non-fatal):', e.message); }
+  try { await migrateAdminToInstructor(); } catch (e) { console.error('migrateAdminToInstructor failed (non-fatal):', e.message); }
   try { await initSuperAdmin(); } catch (e) { console.error('initSuperAdmin failed (non-fatal):', e.message); }
+  try { await seedCoreCategories(); } catch (e) { console.error('seedCoreCategories failed (non-fatal):', e.message); }
+  try { await seedDemoContent(); } catch (e) { console.error('seedDemoContent failed (non-fatal):', e.message); }
   try { await initScheduledReminders(); } catch (e) { console.error('initScheduledReminders failed (non-fatal):', e.message); }
 
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }

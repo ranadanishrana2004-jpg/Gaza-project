@@ -49,12 +49,14 @@ const TodoScreen = () => {
   const isMobile = width <= 480;
 
   const sidebarItems = [
-    { label: 'Dashboard',      icon: 'grid-outline',             iconActive: 'grid',             route: 'Dashboard' },
-    { label: 'Browse Courses', icon: 'library-outline',          iconActive: 'library',          route: 'Courses' },
-    { label: 'My Learning',    icon: 'school-outline',           iconActive: 'school',           route: 'EnrolledCourses' },
-    { label: 'AI Assistant',   icon: 'sparkles-outline',         iconActive: 'sparkles',         route: 'AITutor' },
-    { label: 'Certificates',   icon: 'ribbon-outline',           iconActive: 'ribbon',           route: 'Certificates' },
-    { label: 'Reminders',      icon: 'checkmark-circle-outline', iconActive: 'checkmark-circle', route: 'Todo' },
+    { label: 'Dashboard', icon: 'grid-outline', iconActive: 'grid', route: 'Dashboard' },
+    { label: 'Browse Courses', icon: 'library-outline', iconActive: 'library', route: 'Courses' },
+    { label: 'My Learning', icon: 'school-outline', iconActive: 'school', route: 'EnrolledCourses' },
+    { label: 'AI Assistant', icon: 'sparkles-outline', iconActive: 'sparkles', route: 'AITutor' },
+    { label: 'Certificates', icon: 'ribbon-outline', iconActive: 'ribbon', route: 'Certificates' },
+    { label: 'Reminders', icon: 'checkmark-circle-outline', iconActive: 'checkmark-circle', route: 'Todo' },
+    { label: 'Library', icon: 'book-outline', iconActive: 'book', route: 'Library' },
+    { label: 'Forum', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Forum' },
   ];
 
   const handleNavigate = (route) => navigation.navigate(route);

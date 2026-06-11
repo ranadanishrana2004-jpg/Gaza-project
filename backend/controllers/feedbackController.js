@@ -2,13 +2,13 @@ const { Feedback, Course, Topic } = require('../models');
 
 exports.createFeedback = async (req, res) => {
   try {
-    if (req.user.role !== 'expert') {
-      return res.status(403).json({ error: 'Only experts can submit feedback' });
+    if (!['student', 'sponsor', 'instructor', 'superadmin'].includes(req.user.role)) {
+      return res.status(403).json({ error: 'You do not have permission to submit feedback' });
     }
 
     const {
       courseName,
-      expertName,
+      userName,
       feedback,
       rating,
       courseId,
@@ -19,7 +19,7 @@ exports.createFeedback = async (req, res) => {
       regenerateCommand,
     } = req.body;
 
-    if (!courseName || !expertName || !feedback || !rating) {
+    if (!courseName || !userName || !feedback || !rating) {
       return res.status(400).json({ error: 'All required fields must be provided' });
     }
 
@@ -42,14 +42,14 @@ exports.createFeedback = async (req, res) => {
     }
     const feedbackRecord = await Feedback.create({
       courseName,
-      expertName,
+      userName,
       feedback,
       rating,
       courseId,
       topicId: topicId || null,
       topicTitle: topicTitle || null,
       lectureId: lectureId || null,
-      expertId: req.user.id,
+      userId: req.user.id,
       feedbackType: feedbackType || 'general_course_feedback',
       regenerateCommand: `${regenerateCommand || ''}`.trim() || null,
     });
@@ -63,8 +63,8 @@ exports.createFeedback = async (req, res) => {
 
 exports.getAllFeedback = async (req, res) => {
   try {
-    if (!['admin', 'superadmin', 'expert'].includes(req.user.role)) {
-      return res.status(403).json({ error: 'Only admins, superadmins, or experts can view feedback' });
+    if (!['instructor', 'superadmin', 'student', 'sponsor'].includes(req.user.role)) {
+      return res.status(403).json({ error: 'You do not have permission to view feedback' });
     }
 
     const where = {};
@@ -72,8 +72,8 @@ exports.getAllFeedback = async (req, res) => {
     if (req.query.topicId) where.topicId = req.query.topicId;
     if (req.query.lectureId) where.lectureId = req.query.lectureId;
     if (req.query.feedbackType) where.feedbackType = req.query.feedbackType;
-    if (req.user.role === 'expert') {
-      where.expertId = req.user.id;
+    if (['student', 'sponsor'].includes(req.user.role)) {
+      where.userId = req.user.id;
     }
 
     const feedbacks = await Feedback.findAll({
@@ -94,8 +94,8 @@ exports.getAllFeedback = async (req, res) => {
 
 exports.getFeedbackById = async (req, res) => {
   try {
-    if (!['admin', 'superadmin', 'expert'].includes(req.user.role)) {
-      return res.status(403).json({ error: 'Only admins, superadmins, or experts can view feedback' });
+    if (!['instructor', 'superadmin', 'student', 'sponsor'].includes(req.user.role)) {
+      return res.status(403).json({ error: 'You do not have permission to view feedback' });
     }
 
     const { id } = req.params;
@@ -110,7 +110,7 @@ exports.getFeedbackById = async (req, res) => {
     if (!feedback) {
       return res.status(404).json({ error: 'Feedback not found' });
     }
-    if (req.user.role === 'expert' && feedback.expertId !== req.user.id) {
+    if (['student', 'sponsor'].includes(req.user.role) && feedback.userId !== req.user.id) {
       return res.status(403).json({ error: 'You can only view your own feedback' });
     }
 
@@ -123,12 +123,12 @@ exports.getFeedbackById = async (req, res) => {
 
 exports.updateFeedback = async (req, res) => {
   try {
-    if (!['admin', 'superadmin'].includes(req.user.role)) {
+    if (!['instructor', 'superadmin'].includes(req.user.role)) {
       return res.status(403).json({ error: 'Only admins can update feedback' });
     }
 
     const { id } = req.params;
-    const { courseName, expertName, feedback, rating, regenerateCommand } = req.body;
+    const { courseName, userName, feedback, rating, regenerateCommand } = req.body;
 
     const feedbackRecord = await Feedback.findByPk(id);
 
@@ -137,7 +137,7 @@ exports.updateFeedback = async (req, res) => {
     }
 
     if (courseName) feedbackRecord.courseName = courseName;
-    if (expertName) feedbackRecord.expertName = expertName;
+    if (userName) feedbackRecord.userName = userName;
     if (feedback) feedbackRecord.feedback = feedback;
     if (rating && rating >= 1 && rating <= 5) feedbackRecord.rating = rating;
     if (regenerateCommand !== undefined) feedbackRecord.regenerateCommand = `${regenerateCommand || ''}`.trim() || null;
@@ -153,7 +153,7 @@ exports.updateFeedback = async (req, res) => {
 
 exports.deleteFeedback = async (req, res) => {
   try {
-    if (!['admin', 'superadmin'].includes(req.user.role)) {
+    if (!['instructor', 'superadmin'].includes(req.user.role)) {
       return res.status(403).json({ error: 'Only admins can delete feedback' });
     }
 

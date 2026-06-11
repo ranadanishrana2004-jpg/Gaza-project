@@ -38,6 +38,10 @@ const PaymentScreen = () => {
   const { width } = useWindowDimensions();
   const { courseId, courseName, amount = 500 } = route.params || {};
 
+  // War-zone learners get certificates free; everyone else makes a compulsory
+  // donation that supports education infrastructure in affected countries.
+  const isWarZone = user?.isWarZone === true;
+
   const [selected, setSelected]           = useState('easypaisa');
   const [phone, setPhone]                 = useState('');
   const [cardNumber, setCardNumber]       = useState('');
@@ -68,19 +72,13 @@ const PaymentScreen = () => {
     return true;
   };
 
-  const handlePay = async () => {
-    if (!validate()) return;
-    setProcessing(true);
-
-    // Simulate 2s payment processing (static/mock)
-    await new Promise(r => setTimeout(r, 2000));
-
+  const issueCertificate = async (successText) => {
     try {
       const res = await certificateAPI.generate({ courseId, grade: 'Pass', sendEmail: true });
       if (res.success) {
         Toast.show({
           type: 'success',
-          text1: 'Payment Successful!',
+          text1: successText,
           text2: 'Your certificate has been sent to your email',
         });
         setTimeout(() => {
@@ -92,6 +90,20 @@ const PaymentScreen = () => {
     } finally {
       setProcessing(false);
     }
+  };
+
+  const handlePay = async () => {
+    if (!validate()) return;
+    setProcessing(true);
+
+    // Simulate 2s donation processing (static/mock)
+    await new Promise(r => setTimeout(r, 2000));
+    await issueCertificate('Thank you for your donation!');
+  };
+
+  const handleClaimFree = async () => {
+    setProcessing(true);
+    await issueCertificate('Certificate issued — free for war-zone learners');
   };
 
   const surface = isDark ? theme.colors.surface : '#fff';
@@ -128,8 +140,10 @@ const PaymentScreen = () => {
               <Icon name="card" size={22} color="#10B981" />
             </View>
             <View style={styles.bannerTextGroup}>
-              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Payment</Text>
-              <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>Complete your certificate purchase</Text>
+              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>{isWarZone ? 'Your Certificate' : 'Support Education'}</Text>
+              <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>
+                {isWarZone ? 'Free for learners in war zones' : 'A contribution that sustains education infrastructure'}
+              </Text>
             </View>
           </View>
         </View>
@@ -147,11 +161,50 @@ const PaymentScreen = () => {
               </Text>
             </View>
           </View>
-          <View style={[styles.amountPill, { backgroundColor: theme.colors.primary }]}>
-            <Text style={styles.amountPillText}>PKR {amount}</Text>
+          <View style={[styles.amountPill, { backgroundColor: isWarZone ? '#10B981' : theme.colors.primary }]}>
+            <Text style={styles.amountPillText}>{isWarZone ? 'FREE' : `PKR ${amount}`}</Text>
           </View>
         </View>
 
+        {isWarZone ? (
+          <>
+            {/* Free access for war-zone learners */}
+            <View style={[styles.formCard, { backgroundColor: surface, borderColor: 'rgba(16,185,129,0.3)' }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <Icon name="shield-checkmark" size={22} color="#10B981" />
+                <Text style={[styles.formTitle, { color: theme.colors.textPrimary, marginBottom: 0 }]}>Free Education Access</Text>
+              </View>
+              <Text style={{ color: theme.colors.textSecondary, fontSize: 13, lineHeight: 20 }}>
+                Because you are learning from a war zone, your education and certificate are completely free.
+                No donation is required. Learners elsewhere contribute to keep this possible.
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.payBtn, { backgroundColor: '#10B981', opacity: processing ? 0.8 : 1 }]}
+              onPress={handleClaimFree}
+              disabled={processing}
+              activeOpacity={0.85}
+            >
+              {processing ? (
+                <>
+                  <ActivityIndicator size="small" color="#fff" />
+                  <Text style={styles.payBtnText}>Processing...</Text>
+                </>
+              ) : (
+                <>
+                  <Icon name="ribbon" size={18} color="#fff" />
+                  <Text style={styles.payBtnText}>Get My Certificate — Free</Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            <Text style={[styles.secureNote, { color: theme.colors.textTertiary }]}>
+              🕊️  Education is free for everyone affected by conflict
+            </Text>
+          </>
+        ) : (
+        <>
         {/* Method Selection */}
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Select Payment Method
@@ -275,15 +328,17 @@ const PaymentScreen = () => {
             </>
           ) : (
             <>
-              <Icon name="lock-closed" size={18} color="#fff" />
-              <Text style={styles.payBtnText}>Pay PKR {amount}</Text>
+              <Icon name="heart" size={18} color="#fff" />
+              <Text style={styles.payBtnText}>Donate PKR {amount}</Text>
             </>
           )}
         </TouchableOpacity>
 
         <Text style={[styles.secureNote, { color: theme.colors.textTertiary }]}>
-          🔒  This is a test payment — no real transaction will occur
+          🔒  Secure donation — supports education infrastructure (demo: no real charge)
         </Text>
+        </>
+        )}
 
       </ScrollView>
     </MainLayout>

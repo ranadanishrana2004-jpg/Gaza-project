@@ -3,9 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '../context/AuthContext';
 import AuthNavigator from './AuthNavigator';
 import AdminNavigator from './AdminNavigator';
-import ExpertNavigator from './ExpertNavigator';
+
 import StudentNavigator from './StudentNavigator';
 import SuperAdminNavigator from './SuperAdminNavigator';
+import SponsorNavigator from './SponsorNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 
 const Stack = createStackNavigator();
@@ -40,10 +41,11 @@ const AppNavigator = () => {
 
   if (role === 'superadmin') {
     console.log('✅ Routing to SuperAdmin Dashboard');
-  } else if (role === 'admin') {
+  } else if (role === 'instructor') {
     console.log('✅ Routing to Admin Navigator');
-  } else if (role === 'expert') {
-    console.log('✅ Routing to Expert Navigator');
+
+  } else if (role === 'sponsor') {
+    console.log('✅ Routing to Sponsor Navigator');
   } else if (user && role) {
     console.log('✅ Routing to Student Navigator (default for authenticated user)');
   } else if (!user) {
@@ -58,10 +60,11 @@ const AppNavigator = () => {
         <Stack.Screen name="Auth" component={AuthNavigator} />
       ) : role === 'superadmin' ? (
         <Stack.Screen name="SuperAdmin" component={SuperAdminNavigator} />
-      ) : role === 'admin' ? (
+      ) : role === 'instructor' ? (
         <Stack.Screen name="Admin" component={AdminNavigator} />
-      ) : role === 'expert' ? (
-        <Stack.Screen name="Expert" component={ExpertNavigator} />
+
+      ) : role === 'sponsor' ? (
+        <Stack.Screen name="Sponsor" component={SponsorNavigator} />
       ) : (
         <Stack.Screen name="Student" component={StudentNavigator} />
       )}

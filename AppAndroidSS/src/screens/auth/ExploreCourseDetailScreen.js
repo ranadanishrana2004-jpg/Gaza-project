@@ -16,9 +16,7 @@ const NAVY   = '#1A1A2E';
 const NAVY2  = '#16213E';
 
 const CAT_COLORS = {
-  Programming: '#6366F1', Technology: '#6366F1', Design: '#EC4899',
-  Business: '#10B981', 'Data Science': '#3B82F6', Data: '#3B82F6',
-  Marketing: '#F59E0B', General: ORANGE,
+  Medicine: '#EF4444', 'Islamic Education': '#10B981', General: ORANGE,
 };
 
 // ── Navbar ────────────────────────────────────────────────────────────────────

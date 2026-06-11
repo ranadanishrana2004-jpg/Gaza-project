@@ -10,8 +10,7 @@ router.use(requireAdmin);
 // Get all students
 router.get('/students', userController.getAllStudents);
 
-// Get all experts
-router.get('/experts', userController.getAllExperts);
+
 
 // User stats
 router.get('/stats', userController.getUserStats);

@@ -55,6 +55,8 @@ const EnrolledCoursesScreen = () => {
     { label: 'AI Assistant', icon: 'sparkles-outline', iconActive: 'sparkles', route: 'AITutor' },
     { label: 'Certificates', icon: 'ribbon-outline', iconActive: 'ribbon', route: 'Certificates' },
     { label: 'Reminders', icon: 'checkmark-circle-outline', iconActive: 'checkmark-circle', route: 'Todo' },
+    { label: 'Library', icon: 'book-outline', iconActive: 'book', route: 'Library' },
+    { label: 'Forum', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Forum' },
   ];
 
   const statusOptions = [

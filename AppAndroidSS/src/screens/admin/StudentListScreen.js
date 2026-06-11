@@ -43,8 +43,7 @@ const StudentListScreen = () => {
   // Sidebar navigation items based on user role
   const sidebarItems = isSuperAdmin ? [
     { label: 'Dashboard', icon: 'grid-outline', iconActive: 'grid', route: 'Dashboard' },
-    { label: 'Manage Admins', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
-    { label: 'Manage Experts', icon: 'people-outline', iconActive: 'people', route: 'ManageExperts' },
+    { label: 'Manage Instructors', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
     { label: 'All Courses', icon: 'book-outline', iconActive: 'book', route: 'Courses' },
     { label: 'All Students', icon: 'school-outline', iconActive: 'school', route: 'Students' },
     { label: 'Categories', icon: 'layers-outline', iconActive: 'layers', route: 'Categories' },
@@ -55,13 +54,13 @@ const StudentListScreen = () => {
     { label: 'Manage Courses', icon: 'book-outline', iconActive: 'book', route: 'Courses' },
     { label: 'Students', icon: 'people-outline', iconActive: 'people', route: 'Students' },
     { label: 'Certificates', icon: 'ribbon-outline', iconActive: 'ribbon', route: 'CertificateManagement' },
-    { label: 'Expert Feedback', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Feedback' },
+    { label: 'Course Feedback', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Feedback' },
   ];
 
   const handleNavigate = (route) => {
     if (isSuperAdmin) {
       if (route === 'ManageAdmins') {
-        navigation.navigate('ManageUsers', { userType: 'admin' });
+        navigation.navigate('ManageUsers', { userType: 'instructor' });
       } else if (route === 'ManageExperts') {
         navigation.navigate('ManageUsers', { userType: 'expert' });
       } else if (route === 'Categories') {

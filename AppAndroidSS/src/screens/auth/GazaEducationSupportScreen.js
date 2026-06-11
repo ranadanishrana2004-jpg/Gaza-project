@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
 import ThemeToggle from '../../components/ThemeToggle';
+import Navbar from '../../components/ui/Navbar';
 
 const SUPPORT_TIERS = [
   {
@@ -136,68 +137,52 @@ const GazaEducationSupportScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Navbar navigation={navigation} isDark={isDark} isMobile={isMobile} isDesktop={!isMobile} showBack={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={[
-            styles.heroWrap,
-            isWeb
-              ? { background: `linear-gradient(135deg, ${theme.colors.heroGradientStart} 0%, ${theme.colors.heroGradientMid} 52%, ${theme.colors.primary} 100%)` }
-              : { backgroundColor: theme.colors.heroGradientStart },
-          ]}
-        >
+        <View style={styles.heroWrap}>
           <View style={[styles.heroGlow, { backgroundColor: `${theme.colors.accent}22` }]} />
           <View style={[styles.heroGlowSecondary, { backgroundColor: `${theme.colors.primaryLight}18` }]} />
 
-          <View style={styles.topBar}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={[styles.backBtn, { backgroundColor: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.18)' }]}
-            >
-              <Icon name="arrow-back" size={18} color="#FFFFFF" />
-            </TouchableOpacity>
-            <ThemeToggle iconColor="#FFFFFF" />
-          </View>
-
           <View style={[styles.heroContent, isMobile && { paddingHorizontal: 20 }]}>
-            <View style={[styles.heroBadge, { backgroundColor: 'rgba(255,255,255,0.12)' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }]}>
               <Icon name="heart-outline" size={14} color={theme.colors.accent} />
-              <Text style={styles.heroBadgeText}>Gaza Education Support Portal</Text>
+              <Text style={[styles.heroBadgeText, { color: theme.colors.textPrimary }]}>Gaza Education Support Portal</Text>
             </View>
 
-            <Text style={[styles.heroTitle, isMobile && { fontSize: 34, lineHeight: 42 }]}>
+            <Text style={[styles.heroTitle, isMobile && { fontSize: 34, lineHeight: 42 }, { color: theme.colors.textPrimary }]}>
               Fund the future of learning in Gaza
             </Text>
-            <Text style={[styles.heroSubtitle, isMobile && { fontSize: 15, lineHeight: 24 }]}>
+            <Text style={[styles.heroSubtitle, isMobile && { fontSize: 15, lineHeight: 24 }, { color: theme.colors.textSecondary }]}>
               Help students, teachers, and learning communities stay connected to education through scholarships,
               devices, teacher support, and safe study access.
             </Text>
 
-            <View style={[styles.progressCard, { backgroundColor: 'rgba(255,255,255,0.10)', borderColor: 'rgba(255,255,255,0.14)' }, isMobile && { padding: 18 }]}>
+            <View style={[styles.progressCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.cardBorder }, isMobile && { padding: 18 }]}>
               <View style={[styles.progressHeader, isMobile && { flexDirection: 'column', alignItems: 'flex-start', gap: 12 }]}>
                 <View>
-                  <Text style={styles.progressLabel}>Campaign Goal</Text>
-                  <Text style={styles.progressRaised}>${progress.raised.toLocaleString()}</Text>
-                  <Text style={styles.progressGoal}>raised of ${progress.goal.toLocaleString()}</Text>
+                  <Text style={[styles.progressLabel, { color: theme.colors.textSecondary }]}>Campaign Goal</Text>
+                  <Text style={[styles.progressRaised, { color: theme.colors.textPrimary }]}>${progress.raised.toLocaleString()}</Text>
+                  <Text style={[styles.progressGoal, { color: theme.colors.textSecondary }]}>raised of ${progress.goal.toLocaleString()}</Text>
                 </View>
-                <View style={styles.progressPill}>
-                  <Text style={styles.progressPillText}>{progress.percent}% funded</Text>
+                <View style={[styles.progressPill, { backgroundColor: `${theme.colors.accent}15` }]}>
+                  <Text style={[styles.progressPillText, { color: theme.colors.accent }]}>{progress.percent}% funded</Text>
                 </View>
               </View>
-              <View style={styles.progressTrack}>
+              <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }]}>
                 <View style={[styles.progressFill, { width: `${progress.percent}%`, backgroundColor: theme.colors.accent }]} />
               </View>
               <View style={[styles.metricsRow, isMobile && { flexDirection: 'column', gap: 12 }]}>
                 <View style={styles.metricItem}>
-                  <Text style={styles.metricValue}>1,240</Text>
-                  <Text style={styles.metricLabel}>learners supported</Text>
+                  <Text style={[styles.metricValue, { color: theme.colors.textPrimary }]}>1,240</Text>
+                  <Text style={[styles.metricLabel, { color: theme.colors.textSecondary }]}>learners supported</Text>
                 </View>
                 <View style={styles.metricItem}>
-                  <Text style={styles.metricValue}>320</Text>
-                  <Text style={styles.metricLabel}>device access kits</Text>
+                  <Text style={[styles.metricValue, { color: theme.colors.textPrimary }]}>320</Text>
+                  <Text style={[styles.metricLabel, { color: theme.colors.textSecondary }]}>device access kits</Text>
                 </View>
                 <View style={styles.metricItem}>
-                  <Text style={styles.metricValue}>58</Text>
-                  <Text style={styles.metricLabel}>teacher support grants</Text>
+                  <Text style={[styles.metricValue, { color: theme.colors.textPrimary }]}>58</Text>
+                  <Text style={[styles.metricLabel, { color: theme.colors.textSecondary }]}>teacher support grants</Text>
                 </View>
               </View>
             </View>
@@ -316,39 +301,39 @@ const GazaEducationSupportScreen = ({ navigation }) => {
               style={[
                 styles.sideCard,
                 {
-                  backgroundColor: theme.colors.heroGradientStart,
-                  borderColor: theme.colors.heroGradientMid,
+                  backgroundColor: theme.colors.card,
+                  borderColor: theme.colors.cardBorder,
                   width: isMobile ? '100%' : '38%',
                 },
               ]}
             >
-              <Text style={styles.sideTag}>Transparency</Text>
-              <Text style={styles.sideTitle}>How funds are allocated</Text>
-              <Text style={styles.sideSub}>
+              <Text style={[styles.sideTag, { color: theme.colors.textTertiary }]}>Transparency</Text>
+              <Text style={[styles.sideTitle, { color: theme.colors.textPrimary }]}>How funds are allocated</Text>
+              <Text style={[styles.sideSub, { color: theme.colors.textSecondary }]}>
                 We prioritize direct educational continuity first, then the infrastructure that keeps learning possible.
               </Text>
 
               {TRANSPARENCY.map((row) => (
-                <View key={row.label} style={styles.allocationRow}>
-                  <Text style={styles.allocationLabel}>{row.label}</Text>
-                  <Text style={styles.allocationValue}>{row.value}</Text>
+                <View key={row.label} style={[styles.allocationRow, { borderBottomColor: theme.colors.border }]}>
+                  <Text style={[styles.allocationLabel, { color: theme.colors.textSecondary }]}>{row.label}</Text>
+                  <Text style={[styles.allocationValue, { color: theme.colors.textPrimary }]}>{row.value}</Text>
                 </View>
               ))}
 
-              <View style={styles.sideDivider} />
+              <View style={[styles.sideDivider, { backgroundColor: theme.colors.border }]} />
 
-              <Text style={styles.sideMiniTitle}>Partnership options</Text>
+              <Text style={[styles.sideMiniTitle, { color: theme.colors.textPrimary }]}>Partnership options</Text>
               <View style={styles.partnerBullet}>
                 <Icon name="checkmark" size={16} color={theme.colors.accent} />
-                <Text style={styles.partnerBulletText}>Monthly sponsorship circles</Text>
+                <Text style={[styles.partnerBulletText, { color: theme.colors.textSecondary }]}>Monthly sponsorship circles</Text>
               </View>
               <View style={styles.partnerBullet}>
                 <Icon name="checkmark" size={16} color={theme.colors.accent} />
-                <Text style={styles.partnerBulletText}>Corporate education giving</Text>
+                <Text style={[styles.partnerBulletText, { color: theme.colors.textSecondary }]}>Corporate education giving</Text>
               </View>
               <View style={styles.partnerBullet}>
                 <Icon name="checkmark" size={16} color={theme.colors.accent} />
-                <Text style={styles.partnerBulletText}>Institutional and foundation partnerships</Text>
+                <Text style={[styles.partnerBulletText, { color: theme.colors.textSecondary }]}>Institutional and foundation partnerships</Text>
               </View>
             </View>
           </View>

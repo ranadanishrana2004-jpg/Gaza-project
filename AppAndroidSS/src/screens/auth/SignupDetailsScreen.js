@@ -75,6 +75,9 @@ const SignupDetailsScreen = ({ route, navigation }) => {
   const [password, setPassword]         = useState('');
   const [confirmPw, setConfirmPw]       = useState('');
   const [phone, setPhone]               = useState('');
+  const [location, setLocation]         = useState('');
+  const [isWarZone, setIsWarZone]       = useState(false);
+  const [role, setRole]                 = useState('student');
   const [showPw, setShowPw]             = useState(false);
   const [error, setError]               = useState('');
 
@@ -85,8 +88,9 @@ const SignupDetailsScreen = ({ route, navigation }) => {
     if (!password)             return setError('Please enter a password');
     if (password.length < 6)   return setError('Password must be at least 6 characters');
     if (password !== confirmPw) return setError('Passwords do not match');
+    if (!location)             return setError('Please enter your country/location');
     try {
-      const result = await completeRegistration(email, password, name, phone || null);
+      const result = await completeRegistration(email, password, name, phone || null, location, isWarZone, role);
       if (!result.success) setError(result.error || 'Registration failed');
     } catch (err) {
       setError(err.message || 'Registration failed');
@@ -143,6 +147,41 @@ const SignupDetailsScreen = ({ route, navigation }) => {
 
             <AuthInput C={C} icon="call-outline" placeholder="Phone number (optional)" value={phone}
               onChangeText={setPhone} keyboardType="phone-pad" autoCapitalize="none" />
+
+            <AuthInput C={C} icon="location-outline" placeholder="Country / Location" value={location}
+              onChangeText={setLocation} autoCapitalize="words" />
+
+            {/* Role Selection */}
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 14 }}>
+              <TouchableOpacity
+                style={[s.roleBtn, role === 'student' && { borderColor: ORANGE, backgroundColor: ORANGE + '10' }]}
+                onPress={() => setRole('student')}
+              >
+                <Icon name="school-outline" size={16} color={role === 'student' ? ORANGE : C.textSecondary} />
+                <Text style={{ color: role === 'student' ? ORANGE : C.textSecondary, fontSize: 13, fontWeight: '600' }}>Student</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[s.roleBtn, role === 'sponsor' && { borderColor: ORANGE, backgroundColor: ORANGE + '10' }]}
+                onPress={() => setRole('sponsor')}
+              >
+                <Icon name="heart-outline" size={16} color={role === 'sponsor' ? ORANGE : C.textSecondary} />
+                <Text style={{ color: role === 'sponsor' ? ORANGE : C.textSecondary, fontSize: 13, fontWeight: '600' }}>Sponsor</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* War Zone Checkbox (Only for students) */}
+            {role === 'student' && (
+              <TouchableOpacity
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14, paddingHorizontal: 4 }}
+                onPress={() => setIsWarZone(!isWarZone)}
+                activeOpacity={0.8}
+              >
+                <View style={[s.checkbox, isWarZone && { backgroundColor: ORANGE, borderColor: ORANGE }]}>
+                  {isWarZone && <Icon name="checkmark" size={12} color="#FFFFFF" />}
+                </View>
+                <Text style={{ color: C.textSecondary, fontSize: 13, flex: 1 }}>I am currently located in a war zone (Access free education)</Text>
+              </TouchableOpacity>
+            )}
 
             <AuthInput C={C} icon="lock-closed-outline" placeholder="Create password (min 6 characters)" value={password}
               onChangeText={t => { setPassword(t); setError(''); }} secureTextEntry={!showPw}
@@ -201,6 +240,8 @@ const s = StyleSheet.create({
   primaryBtn: { height: 52, borderRadius: 12, backgroundColor: ORANGE, borderWidth: 1, borderColor: '#E77828', justifyContent: 'center', alignItems: 'center', shadowColor: '#C96A24', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.16, shadowRadius: 6, elevation: 3 },
   primaryBtnText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800', letterSpacing: 0.12 },
   terms: { fontSize: 11, textAlign: 'center', lineHeight: 18, marginTop: 18 },
+  roleBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(150,150,150,0.2)' },
+  checkbox: { width: 18, height: 18, borderRadius: 4, borderWidth: 1.5, borderColor: 'rgba(150,150,150,0.4)', justifyContent: 'center', alignItems: 'center' },
 });
 
 export default SignupDetailsScreen;

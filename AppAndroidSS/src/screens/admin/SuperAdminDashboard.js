@@ -272,7 +272,7 @@ const dsc = StyleSheet.create({
 
 const SuperAdminDashboard = () => {
   const { user, logout } = useAuth();
-  const { courses, students, experts, fetchCourses, fetchStudents, fetchExperts } = useData();
+  const { courses, students, fetchCourses, fetchStudents } = useData();
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
   const { width } = useWindowDimensions();
@@ -288,12 +288,13 @@ const SuperAdminDashboard = () => {
 
   const sidebarItems = [
     { label: 'Dashboard', icon: 'grid-outline', iconActive: 'grid', route: 'Dashboard' },
-    { label: 'Manage Admins', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
-    { label: 'Manage Experts', icon: 'people-outline', iconActive: 'people', route: 'ManageExperts' },
+    { label: 'Manage Instructors', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
     { label: 'All Courses', icon: 'book-outline', iconActive: 'book', route: 'Courses' },
     { label: 'All Students', icon: 'school-outline', iconActive: 'school', route: 'Students' },
     { label: 'Categories', icon: 'layers-outline', iconActive: 'layers', route: 'Categories' },
     { label: 'Certificates', icon: 'ribbon-outline', iconActive: 'ribbon', route: 'CertificateManagement' },
+    { label: 'Library', icon: 'book-outline', iconActive: 'book', route: 'Library' },
+    { label: 'Forum', icon: 'chatbubbles-outline', iconActive: 'chatbubbles', route: 'Forum' },
   ];
 
   useEffect(() => {
@@ -310,12 +311,12 @@ const SuperAdminDashboard = () => {
 
   const loadData = async () => {
     try {
-      await Promise.all([fetchCourses(), fetchStudents(), fetchExperts()]);
-      // Fetch admins (filter to only role === 'admin')
+      await Promise.all([fetchCourses(), fetchStudents()]);
+      // Fetch admins (filter to only role === 'instructor')
       try {
         const adminRes = await adminAPI.getAll();
         if (adminRes.success && adminRes.users) {
-          const onlyAdmins = adminRes.users.filter(u => u.role === 'admin');
+          const onlyAdmins = adminRes.users.filter(u => u.role === 'instructor');
           setAdmins(onlyAdmins);
         }
       } catch (e) {
@@ -330,12 +331,12 @@ const SuperAdminDashboard = () => {
 
   const reloadData = async () => {
     try {
-      await Promise.all([fetchCourses(), fetchStudents(), fetchExperts()]);
-      // Refresh admins (filter to only role === 'admin')
+      await Promise.all([fetchCourses(), fetchStudents()]);
+      // Refresh admins (filter to only role === 'instructor')
       try {
         const adminRes = await adminAPI.getAll();
         if (adminRes.success && adminRes.users) {
-          const onlyAdmins = adminRes.users.filter(u => u.role === 'admin');
+          const onlyAdmins = adminRes.users.filter(u => u.role === 'instructor');
           setAdmins(onlyAdmins);
         }
       } catch (e) {
@@ -354,9 +355,7 @@ const SuperAdminDashboard = () => {
 
   const handleNavigate = (route) => {
     if (route === 'ManageAdmins') {
-      navigation.navigate('ManageUsers', { userType: 'admin' });
-    } else if (route === 'ManageExperts') {
-      navigation.navigate('ManageUsers', { userType: 'expert' });
+      navigation.navigate('ManageUsers', { userType: 'instructor' });
     } else if (route === 'Categories') {
       navigation.navigate('CategoryManagement');
     } else {
@@ -375,17 +374,15 @@ const SuperAdminDashboard = () => {
 
     return {
       totalAdmins: admins.length,
-      totalExperts: experts?.length || 0,
       totalCourses: courses.length,
       totalStudents: students.length,
       publishedCourses: courses.filter(c => c.status === 'published').length,
       activeStudents: students.filter(s => s.isActive !== false).length,
       adminChange: '+2',
-      expertChange: '+5%',
       courseChange: calculatePercentageChange(courses.length, coursesLastMonth),
       studentChange: calculatePercentageChange(students.length, studentsLastMonth),
     };
-  }, [courses, students, experts, admins]);
+  }, [courses, students, admins]);
 
   // Build user growth chart data
   const userGrowthData = useMemo(() => {
@@ -468,7 +465,7 @@ const SuperAdminDashboard = () => {
               <Icon name="shield-checkmark" size={24} color={theme.colors.secondary} />
               </View>
               <View>
-                <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Super Admin Dashboard</Text>
+                <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Super Instructor Dashboard</Text>
                 <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>
                   System-wide management and overview
                 </Text>
@@ -513,7 +510,7 @@ const SuperAdminDashboard = () => {
               <Icon name="shield-checkmark" size={24} color={theme.colors.secondary} />
             </View>
             <View>
-              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Super Admin Dashboard</Text>
+              <Text style={[styles.bannerTitle, { color: theme.colors.textPrimary }]}>Super Instructor Dashboard</Text>
               <Text style={[styles.bannerSubtitle, { color: theme.colors.textSecondary }]}>
                 System oversight, access control, and growth metrics in one view.
               </Text>
@@ -521,7 +518,7 @@ const SuperAdminDashboard = () => {
           </View>
           <TouchableOpacity
             style={[styles.createBtn, { backgroundColor: theme.colors.primary }]}
-            onPress={() => navigation.navigate('ManageUsers', { userType: 'admin' })}
+            onPress={() => navigation.navigate('ManageUsers', { userType: 'instructor' })}
           >
             <Icon name="person-add" size={16} color="#FFFFFF" />
             <Text style={styles.createBtnText}>Add Admin</Text>
@@ -534,18 +531,8 @@ const SuperAdminDashboard = () => {
             icon="person-outline"
             iconColor={theme.colors.primary}
             value={stats.totalAdmins}
-            label="Total Admins"
+            label="Total Instructors"
             change={stats.adminChange}
-            theme={theme}
-            isDark={isDark}
-            style={styles.statCard}
-          />
-          <DashboardStatCard
-            icon="shield-checkmark-outline"
-            iconColor={theme.colors.secondary}
-            value={stats.totalExperts}
-            label="Total Experts"
-            change={stats.expertChange}
             theme={theme}
             isDark={isDark}
             style={styles.statCard}
@@ -677,19 +664,7 @@ const SuperAdminDashboard = () => {
                     {stats.totalAdmins}
                   </Text>
                   <Text style={[styles.insightMetricLabel, { color: theme.colors.textSecondary }]}>
-                    Admins
-                  </Text>
-                </View>
-                <View style={[styles.insightMetricDivider, { backgroundColor: theme.colors.border }]} />
-                <View style={styles.insightMetric}>
-                  <View style={[styles.insightMetricIcon, { backgroundColor: '#8B5CF618' }]}>
-                    <Icon name="shield-checkmark" size={14} color="#8B5CF6" />
-                  </View>
-                  <Text style={[styles.insightMetricValue, { color: theme.colors.textPrimary }]}>
-                    {stats.totalExperts}
-                  </Text>
-                  <Text style={[styles.insightMetricLabel, { color: theme.colors.textSecondary }]}>
-                    Experts
+                    Instructors
                   </Text>
                 </View>
                 <View style={[styles.insightMetricDivider, { backgroundColor: theme.colors.border }]} />
@@ -734,7 +709,7 @@ const SuperAdminDashboard = () => {
 
         </View>
 
-        {/* Admins Table */}
+        {/* Instructors Table */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View style={styles.sectionTitleRow}>
@@ -743,16 +718,16 @@ const SuperAdminDashboard = () => {
               </View>
               <View>
                 <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                  Administrators
+                  Instructors
                 </Text>
                 <Text style={[styles.sectionSubtitle, { color: theme.colors.textSecondary }]}>
-                  {admins.length} total admins
+                  {admins.length} total instructors
                 </Text>
               </View>
             </View>
             <TouchableOpacity
               style={[styles.manageButton, { borderColor: '#6366F1' }]}
-              onPress={() => navigation.navigate('ManageUsers', { userType: 'admin' })}
+              onPress={() => navigation.navigate('ManageUsers', { userType: 'instructor' })}
             >
               <Text style={[styles.manageButtonText, { color: '#6366F1' }]}>Manage</Text>
               <Icon name="chevron-forward" size={14} color="#6366F1" />
@@ -819,97 +794,6 @@ const SuperAdminDashboard = () => {
               <View style={styles.emptyState}>
                 <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>
                   No admins found
-                </Text>
-              </View>
-            )}
-          </AppCard>
-        </View>
-
-        {/* Experts Table */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <View style={[styles.sectionIconBadge, { backgroundColor: '#8B5CF6' + '15' }]}>
-                <Icon name="shield-checkmark" size={16} color="#8B5CF6" />
-              </View>
-              <View>
-                <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                  Experts
-                </Text>
-                <Text style={[styles.sectionSubtitle, { color: theme.colors.textSecondary }]}>
-                  {experts?.length || 0} total experts
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={[styles.manageButton, { borderColor: '#8B5CF6' }]}
-              onPress={() => navigation.navigate('ManageUsers', { userType: 'expert' })}
-            >
-              <Text style={[styles.manageButtonText, { color: '#8B5CF6' }]}>Manage</Text>
-              <Icon name="chevron-forward" size={14} color="#8B5CF6" />
-            </TouchableOpacity>
-          </View>
-
-          <AppCard style={styles.tableCard}>
-            {experts && experts.length > 0 ? (
-              experts.slice(0, 5).map((expert, index) => (
-                <View
-                  key={expert.id || index}
-                  style={[
-                    styles.tableRow,
-                    index % 2 === 1 && {
-                      backgroundColor: isDark
-                        ? 'rgba(255,255,255,0.02)'
-                        : 'rgba(139,92,246,0.03)',
-                    },
-                    index < Math.min(experts.length, 5) - 1 && {
-                      borderBottomColor: theme.colors.border,
-                      borderBottomWidth: 1,
-                    },
-                  ]}
-                >
-                  <View style={styles.userRowLeft}>
-                    <View style={[styles.userAvatar, { backgroundColor: '#8B5CF6' }]}>
-                      <Text style={styles.userAvatarText}>
-                        {expert.name?.charAt(0)?.toUpperCase() || 'E'}
-                      </Text>
-                    </View>
-                    <View style={styles.userDetails}>
-                      <Text style={[styles.userName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
-                        {expert.name || 'Unknown'}
-                      </Text>
-                      <Text style={[styles.userEmail, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-                        {expert.email || '-'}
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusPill,
-                      { backgroundColor: expert.isActive !== false ? '#10B98115' : '#EF444415' },
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.statusDot,
-                        { backgroundColor: expert.isActive !== false ? '#10B981' : '#EF4444' },
-                      ]}
-                    />
-                    <Text
-                      style={[
-                        styles.statusPillText,
-                        { color: expert.isActive !== false ? '#10B981' : '#EF4444' },
-                      ]}
-                    >
-                      {expert.isActive !== false ? 'Active' : 'Inactive'}
-                    </Text>
-                  </View>
-                </View>
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>
-                  No experts found
                 </Text>
               </View>
             )}

@@ -16,7 +16,7 @@ const normalizeUser = (payload, fallbackRole) => {
     payload.role ||
     (payload.email === 'skillspheresuperadmin@admin.com' ? 'superadmin' : undefined) ||
     fallbackRole ||
-    'admin';
+    'instructor';
 
   console.log('🔧 normalizeUser: payload.role=', payload.role);
   console.log('🔧 normalizeUser: email check=', payload.email === 'skillspheresuperadmin@admin.com');
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
         console.log('🔍 Raw admin from response:', JSON.stringify(response.admin, null, 2));
         console.log('🔍 Will normalize:', response.user || response.admin);
 
-        const userPayload = normalizeUser(response.user || response.admin, 'admin');
+        const userPayload = normalizeUser(response.user || response.admin, 'instructor');
         console.log('✅ User payload after normalization:', JSON.stringify(userPayload, null, 2));
         console.log('✅ Role specifically:', userPayload?.role);
 
@@ -106,13 +106,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (name, email, password, role = 'admin', phone = null) => {
+  const signup = async (name, email, password, role = 'instructor', phone = null) => {
     setIsLoading(true);
     try {
       const response = await authAPI.register({ name, email, password, role, phone });
 
       if (response.success) {
-        const userPayload = normalizeUser(response.user || response.admin, role || 'admin');
+        const userPayload = normalizeUser(response.user || response.admin, role || 'instructor');
         await AsyncStorage.setItem('@skillsphere:token', response.token);
         await AsyncStorage.setItem('@skillsphere:user', JSON.stringify(userPayload));
         setUser(userPayload);
@@ -284,10 +284,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const completeRegistration = async (email, password, name, phone) => {
+  const completeRegistration = async (email, password, name, phone, location, isWarZone, role = 'student') => {
     setIsLoading(true);
     try {
-      const response = await authAPI.completeRegistration({ email, password, name, phone });
+      const response = await authAPI.completeRegistration({ email, password, name, phone, location, isWarZone, role });
 
       if (response.success) {
         const userPayload = normalizeUser(response.user, 'student');

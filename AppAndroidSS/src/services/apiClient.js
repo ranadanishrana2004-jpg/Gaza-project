@@ -211,7 +211,6 @@ export const adminAPI = {
 export const userAPI = {
   getAll: () => get('/users'),
   getStudents: () => get('/users/students'),
-  getExperts: () => get('/users/experts'),
   getById: (id) => get(`/users/${id}`),
   update: (id, data) => put(`/users/${id}`, data),
   toggleStatus: (id) => patch(`/users/${id}/toggle-status`, {}),

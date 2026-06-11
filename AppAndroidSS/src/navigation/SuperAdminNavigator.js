@@ -13,6 +13,8 @@ import CategoryManagementScreen from '../screens/admin/CategoryManagementScreen'
 import CertificateManagementScreen from '../screens/admin/CertificateManagementScreen';
 import FeedbackScreen from '../screens/admin/FeedbackScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import LibraryScreen from '../screens/LibraryScreen';
+import ForumScreen from '../screens/ForumScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +29,6 @@ const SuperAdminNavigator = () => {
       <Stack.Screen name="Dashboard" component={SuperAdminDashboard} />
       <Stack.Screen name="ManageUsers" component={ManageUsersScreen} />
       <Stack.Screen name="ManageAdmins" component={ManageUsersScreen} />
-      <Stack.Screen name="ManageExperts" component={ManageUsersScreen} />
       <Stack.Screen name="Courses" component={CourseListScreen} />
       <Stack.Screen name="CreateCourse" component={CreateCourseScreen} />
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
@@ -40,6 +41,8 @@ const SuperAdminNavigator = () => {
       <Stack.Screen name="Feedback" component={FeedbackScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Library" component={LibraryScreen} />
+      <Stack.Screen name="Forum" component={ForumScreen} />
     </Stack.Navigator>
   );
 };

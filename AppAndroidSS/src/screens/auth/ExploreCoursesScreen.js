@@ -16,9 +16,7 @@ const NAVY   = '#1A1A2E';
 const NAVY2  = '#16213E';
 
 const CAT_COLORS = {
-  Programming: '#6366F1', Technology: '#6366F1', Design: '#EC4899',
-  Business: '#10B981', 'Data Science': '#3B82F6', Data: '#3B82F6',
-  Marketing: '#F59E0B', General: ORANGE,
+  Medicine: '#EF4444', 'Islamic Education': '#10B981', General: ORANGE,
 };
 
 // ── Navbar ────────────────────────────────────────────────────────────────────
@@ -236,7 +234,7 @@ const ExploreCoursesScreen = () => {
               Explore Our <Text style={{ color: ORANGE }}>Course Library</Text>
             </Text>
             <Text style={[s.heroSub, { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(26,26,46,0.6)' }]}>
-              Browse {courses.length} published courses. Sign up to start learning and earn certificates.
+              Browse {courses.length} specialized courses. Create an account to enroll and earn certificates.
             </Text>
 
             {/* Search bar */}
@@ -370,11 +368,11 @@ const ExploreCoursesScreen = () => {
                 <Icon name="school-outline" size={40} color={ORANGE} style={{ marginBottom: 16 }} />
                 <Text style={s.ctaTitle}>Ready to Start Learning?</Text>
                 <Text style={s.ctaSub}>
-                  Create a free account and get instant access to all courses, the AI assistant, and certificates.
+                  Create an account to start your learning journey, access the AI assistant, and earn certificates.
                 </Text>
                 <View style={{ flexDirection: isMobile ? 'column' : 'row', gap: 12, marginTop: 20 }}>
                   <TouchableOpacity style={s.ctaBtnPrimary} onPress={() => navigation.navigate('Signup')}>
-                    <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '700' }}>Create Free Account</Text>
+                    <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '700' }}>Create Account / Support</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={s.ctaBtnSecondary} onPress={() => navigation.navigate('Login')}>
                     <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '600' }}>Sign In</Text>

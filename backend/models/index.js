@@ -16,6 +16,11 @@ const AIChatSession = require('./AIChatSession');
 const AIChatMessage = require('./AIChatMessage');
 const DailyActivity = require('./DailyActivity');
 const Todo = require('./Todo');
+const LibraryItem = require('./LibraryItem');
+const ForumChannel = require('./ForumChannel');
+const ForumMessage = require('./ForumMessage');
+const Sponsorship = require('./Sponsorship');
+const StudentUpload = require('./StudentUpload');
 const { sequelize } = require('../config/database');
 
 User.hasMany(Course, { foreignKey: 'userId', as: 'courses', onDelete: 'CASCADE' });
@@ -36,8 +41,8 @@ Feedback.belongsTo(Course, { foreignKey: 'courseId', as: 'course', onDelete: 'CA
 Course.hasMany(Feedback, { foreignKey: 'courseId', as: 'feedbacks', onDelete: 'CASCADE' });
 Feedback.belongsTo(Topic, { foreignKey: 'topicId', as: 'topic', onDelete: 'CASCADE' });
 Topic.hasMany(Feedback, { foreignKey: 'topicId', as: 'feedbacks', onDelete: 'CASCADE' });
-Feedback.belongsTo(User, { foreignKey: 'expertId', as: 'expert', onDelete: 'SET NULL' });
-User.hasMany(Feedback, { foreignKey: 'expertId', as: 'submittedFeedbacks', onDelete: 'SET NULL' });
+Feedback.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'SET NULL' });
+User.hasMany(Feedback, { foreignKey: 'userId', as: 'submittedFeedbacks', onDelete: 'SET NULL' });
 
 User.hasMany(Enrollment, { foreignKey: 'userId', as: 'enrollments', onDelete: 'CASCADE' });
 Enrollment.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
@@ -100,6 +105,32 @@ Todo.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
 User.hasMany(DailyActivity, { foreignKey: 'userId', as: 'dailyActivities', onDelete: 'CASCADE' });
 DailyActivity.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
 
+User.hasMany(LibraryItem, { foreignKey: 'uploadedBy', as: 'uploadedLibraryItems' });
+LibraryItem.belongsTo(User, { foreignKey: 'uploadedBy', as: 'uploader' });
+User.hasMany(LibraryItem, { foreignKey: 'approvedBy', as: 'approvedLibraryItems' });
+LibraryItem.belongsTo(User, { foreignKey: 'approvedBy', as: 'approver' });
+
+User.hasMany(ForumChannel, { foreignKey: 'createdBy', as: 'forumChannels' });
+ForumChannel.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+ForumChannel.hasMany(ForumMessage, { foreignKey: 'channelId', as: 'messages', onDelete: 'CASCADE' });
+ForumMessage.belongsTo(ForumChannel, { foreignKey: 'channelId', as: 'channel', onDelete: 'CASCADE' });
+
+User.hasMany(ForumMessage, { foreignKey: 'senderId', as: 'forumMessages', onDelete: 'CASCADE' });
+ForumMessage.belongsTo(User, { foreignKey: 'senderId', as: 'sender', onDelete: 'CASCADE' });
+
+User.hasMany(Sponsorship, { foreignKey: 'sponsorId', as: 'sponsoredStudents', onDelete: 'CASCADE' });
+Sponsorship.belongsTo(User, { foreignKey: 'sponsorId', as: 'sponsor', onDelete: 'CASCADE' });
+
+User.hasMany(Sponsorship, { foreignKey: 'studentId', as: 'sponsors', onDelete: 'CASCADE' });
+Sponsorship.belongsTo(User, { foreignKey: 'studentId', as: 'student', onDelete: 'CASCADE' });
+
+ForumChannel.belongsTo(User, { foreignKey: 'directUserId1', as: 'directUser1' });
+ForumChannel.belongsTo(User, { foreignKey: 'directUserId2', as: 'directUser2' });
+
+User.hasMany(StudentUpload, { foreignKey: 'userId', as: 'uploads', onDelete: 'CASCADE' });
+StudentUpload.belongsTo(User, { foreignKey: 'userId', as: 'student', onDelete: 'CASCADE' });
+
 module.exports = {
   sequelize,
   User,
@@ -120,4 +151,9 @@ module.exports = {
   AIChatMessage,
   DailyActivity,
   Todo,
+  LibraryItem,
+  ForumChannel,
+  ForumMessage,
+  Sponsorship,
+  StudentUpload,
 };

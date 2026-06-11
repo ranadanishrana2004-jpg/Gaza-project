@@ -22,7 +22,7 @@ const authenticateToken = async (req, res, next) => {
     }
 
     // Ensure permissions object exists for admin users
-    if (user.role === 'admin' && !user.permissions) {
+    if (user.role === 'instructor' && !user.permissions) {
       user.permissions = {
         canManageAllCourses: true,
         canManageCategories: true,
@@ -48,18 +48,12 @@ const requireSuperAdmin = (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-  if (!['admin', 'superadmin'].includes(req.user.role)) {
+  if (!['instructor', 'superadmin'].includes(req.user.role)) {
     return res.status(403).json({ error: 'Admin access required' });
   }
   next();
 };
 
-const requireExpert = (req, res, next) => {
-  if (!['expert', 'admin', 'superadmin'].includes(req.user.role)) {
-    return res.status(403).json({ error: 'Expert access required' });
-  }
-  next();
-};
 
 const requireStudent = (req, res, next) => {
   if (req.user.role !== 'student') {
@@ -102,7 +96,7 @@ module.exports = {
   authenticateToken,
   requireSuperAdmin,
   requireAdmin,
-  requireExpert,
+
   requireStudent,
   checkPermission,
   canManageAllCourses,

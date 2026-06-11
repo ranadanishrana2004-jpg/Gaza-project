@@ -13,6 +13,8 @@ import FeedbackScreen from '../screens/admin/FeedbackScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import SettingsScreen from '../screens/admin/SettingsScreen';
 import ManageUsersScreen from '../screens/admin/ManageUsersScreen';
+import LibraryScreen from '../screens/LibraryScreen';
+import ForumScreen from '../screens/ForumScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +39,8 @@ const AdminNavigator = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="CategoryManagement" component={CategoryManagementScreen} />
       <Stack.Screen name="ManageUsers" component={ManageUsersScreen} />
+      <Stack.Screen name="Library" component={LibraryScreen} />
+      <Stack.Screen name="Forum" component={ForumScreen} />
     </Stack.Navigator>
   );
 };

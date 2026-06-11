@@ -89,6 +89,9 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
+        profilePicture: user.profilePicture,
         permissions: user.permissions
       }
     };
@@ -116,8 +119,8 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    // Allow all valid roles: student, expert, admin, superadmin
-    const validRoles = ['student', 'expert', 'admin', 'superadmin'];
+    // Allow all valid roles: student, admin, superadmin, sponsor
+    const validRoles = ['student', 'instructor', 'superadmin', 'sponsor'];
     const roleToUse = validRoles.includes(role) ? role : 'student';
 
     const user = await User.create({
@@ -139,6 +142,9 @@ exports.register = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
+        profilePicture: user.profilePicture,
         permissions: user.permissions
       }
     });
@@ -184,6 +190,8 @@ exports.updateProfile = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
         profilePicture: user.profilePicture,
         emailVerified: user.emailVerified,
         authProvider: user.authProvider,
@@ -380,7 +388,7 @@ exports.resendOTP = async (req, res) => {
 // Complete registration after OTP verification
 exports.completeRegistration = async (req, res) => {
   try {
-    const { email, password, name, phone } = req.body;
+    const { email, password, name, phone, location, isWarZone, role } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
@@ -405,6 +413,9 @@ exports.completeRegistration = async (req, res) => {
       password: password, // Will be hashed by the beforeUpdate hook
       name: name || user.name,
       phone: phone || null,
+      location: location || null,
+      isWarZone: isWarZone || false,
+      role: role || user.role,
       isActive: true
     });
 
@@ -427,6 +438,9 @@ exports.completeRegistration = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
+        profilePicture: user.profilePicture,
         emailVerified: user.emailVerified,
         permissions: user.permissions
       }
@@ -530,6 +544,9 @@ exports.loginWithOTP = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
+        profilePicture: user.profilePicture,
         emailVerified: user.emailVerified,
         permissions: user.permissions
       }
@@ -682,6 +699,9 @@ exports.verifySignupOTP = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
+        profilePicture: user.profilePicture,
         emailVerified: true,
         permissions: user.permissions
       }
@@ -863,6 +883,8 @@ exports.googleAuth = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        location: user.location,
+        isWarZone: user.isWarZone,
         profilePicture: user.profilePicture,
         emailVerified: user.emailVerified,
         authProvider: user.authProvider,

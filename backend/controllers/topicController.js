@@ -2,7 +2,7 @@ const { sequelize, Topic, Course, Material, Quiz } = require('../models');
 
 function ensureTopicAuthoringAccess(user, course) {
   const isSuperAdmin = user.role === 'superadmin';
-  const isAdmin = user.role === 'admin';
+  const isAdmin = user.role === 'instructor';
   const canManageAll = user.permissions?.canManageAllCourses === true;
   const isOwner = course.userId === user.id;
 

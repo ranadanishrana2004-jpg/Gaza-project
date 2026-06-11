@@ -11,7 +11,7 @@ const Feedback = sequelize.define('Feedback', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  expertName: {
+  userName: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -51,7 +51,7 @@ const Feedback = sequelize.define('Feedback', {
     type: DataTypes.INTEGER,
     allowNull: true
   },
-  expertId: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {

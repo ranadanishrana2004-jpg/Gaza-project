@@ -31,7 +31,7 @@ const ManageUsersScreen = () => {
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const { userType } = route.params || { userType: 'admin' };
+  const { userType } = route.params || { userType: 'instructor' };
   const { width } = useWindowDimensions();
 
   const [allUsers, setAllUsers] = useState([]);
@@ -58,14 +58,13 @@ const ManageUsersScreen = () => {
   const isMobile = width <= 480;
 
   const isSuperAdmin = user?.role === 'superadmin';
-  const userTypeLabel = userType === 'admin' ? 'Admin' : 'Expert';
-  const userTypeLabelPlural = userType === 'admin' ? 'Admins' : 'Experts';
+  const userTypeLabel = 'Instructor';
+  const userTypeLabelPlural = 'Instructors';
 
   // Sidebar navigation items
   const sidebarItems = [
     { label: 'Dashboard', icon: 'grid-outline', iconActive: 'grid', route: 'Dashboard' },
-    { label: 'Manage Admins', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
-    { label: 'Manage Experts', icon: 'people-outline', iconActive: 'people', route: 'ManageExperts' },
+    { label: 'Manage Instructors', icon: 'person-outline', iconActive: 'person', route: 'ManageAdmins' },
     { label: 'All Courses', icon: 'book-outline', iconActive: 'book', route: 'Courses' },
     { label: 'All Students', icon: 'school-outline', iconActive: 'school', route: 'Students' },
     { label: 'Categories', icon: 'layers-outline', iconActive: 'layers', route: 'Categories' },
@@ -74,7 +73,7 @@ const ManageUsersScreen = () => {
 
   const handleNavigate = (route) => {
     if (route === 'ManageAdmins') {
-      navigation.navigate('ManageUsers', { userType: 'admin' });
+      navigation.navigate('ManageUsers', { userType: 'instructor' });
     } else if (route === 'ManageExperts') {
       navigation.navigate('ManageUsers', { userType: 'expert' });
     } else if (route === 'Categories') {
@@ -84,7 +83,7 @@ const ManageUsersScreen = () => {
     }
   };
 
-  const activeRoute = userType === 'admin' ? 'ManageAdmins' : 'ManageExperts';
+  const activeRoute = 'ManageAdmins';
 
   // Fetch users
   useEffect(() => {
@@ -374,7 +373,7 @@ const ManageUsersScreen = () => {
           <View style={styles.metaItem}>
             <View style={styles.metaIconWrap}>
               <Icon
-                name={userType === 'admin' ? 'shield-checkmark-outline' : 'star-outline'}
+                name={userType === 'instructor' ? 'shield-checkmark-outline' : 'star-outline'}
                 size={13}
                 color={ORANGE}
               />
@@ -390,7 +389,7 @@ const ManageUsersScreen = () => {
 
         {/* Actions */}
         <View style={styles.actionRow}>
-          {userType === 'admin' && (
+          {userType === 'instructor' && (
             <TouchableOpacity
               style={[
                 styles.actionBtn,
@@ -501,10 +500,10 @@ const ManageUsersScreen = () => {
             </View>
             <View style={styles.bannerTextGroup}>
               <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>
-                {userType === 'admin' ? 'Manage Admins' : 'Manage Experts'}
+                Manage Instructors
               </Text>
               <Text style={[styles.pageSubtitle, { color: theme.colors.textSecondary }]}>
-                {userType === 'admin' ? 'Admin accounts and permissions' : 'Expert accounts and permissions'}
+                Instructor accounts and permissions
               </Text>
             </View>
           </View>
@@ -517,7 +516,7 @@ const ManageUsersScreen = () => {
           >
             <Icon name="person-add" size={18} color="#FFFFFF" />
             <Text style={styles.addUserBtnText}>
-              {userType === 'admin' ? 'New Admin' : 'New Expert'}
+              New Instructor
             </Text>
           </TouchableOpacity>
         </View>
